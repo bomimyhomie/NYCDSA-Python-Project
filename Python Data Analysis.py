@@ -62,11 +62,11 @@ plt.ylabel('')
 plt.xlabel('')
 plt.show()
 
+#Merge order_items, products on product_id
+df_order_items = pd.merge(df_order_items, df_products[['product_id', 'product_category_name_english']], on='product_id', how='left')
 
-
-
-
-
+#merge orders and customers on order_id
+df_orders = pd.merge(df_orders, df_customers[['state_name']], on = 'customer_id', how='left')
 
 
 
