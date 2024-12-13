@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Dec  9 20:14:44 2024
-
-@author: vlad7
-"""
-
 import os
 import numpy as np
 import pandas as pd
@@ -13,7 +6,7 @@ from matplotlib.ticker import PercentFormatter
 import seaborn as sns
 plt.style.use('ggplot')
 
-os.chdir('C:/Users/vlad7/NYCDSA-Python-Project/Raw Data')
+os.chdir('')
 
 #Import data files as dataframes.
 df_customers = pd.read_csv('olist_customers_dataset.csv')
