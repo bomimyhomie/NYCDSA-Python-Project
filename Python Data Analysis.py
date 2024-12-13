@@ -175,7 +175,7 @@ sns.regplot(x='price', y='review_score', data=df_orders, line_kws={'color': 'pur
 plt.xlabel('Price')
 plt.ylabel('Review Score')
 plt.ylim(0, 10)
-plt.title('Review Score vs. Price Time')
+plt.title('Review Score vs. Price')
 plt.grid(False)
 plt.text(x=0.05, y=9.5, s=corr_text3, fontsize=12, color='teal')
 plt.show()
