@@ -9,6 +9,7 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 import seaborn as sns
 plt.style.use('ggplot')
 
@@ -179,15 +180,41 @@ plt.grid(False)
 plt.text(x=0.05, y=9.5, s=corr_text3, fontsize=12, color='teal')
 plt.show()
 
-#Group order items by category and count number of reviews
-order_count_by_category = df_order_items.groupby('product_category_name_english')['order_id'].nunique()
+#Calculate number of orders and reviews for each product category
+category_order_counts = df_order_items.groupby('product_category_name_english').size().reset_index(name='order_count')
+category_review_counts = df_order_items.groupby('product_category_name_english')['review_score'].count().reset_index(name='review_count')
+category_review_counts = pd.merge(category_review_counts, category_order_counts, on = 'product_category_name_english')
+category_review_counts['percent_reviewed'] = category_review_counts['review_count'] / category_review_counts['order_count']
+category_review_counts['percent_not_reviewed'] = 1 - category_review_counts['percent_reviewed']
 
-order_count_by_category.head(10).sort_values(ascending=True).plot(kind='bar', color='orange')
-plt.title('Number of Reviews by Category')
-plt.xlabel('Category')
-plt.ylabel('Number of Reviews')
+#Plot top 25 number of orders by category
+category_order_counts.sort_values(ascending=False, by = 'order_count').head(25).plot(kind='barh', x='product_category_name_english', y='order_count', color='orange', legend =  False)
+plt.title('Top 25 Number of Orders by Category')
+plt.xlabel('Number of Orders')
+plt.ylabel('Product Category')
 plt.xticks(rotation=0)
 plt.grid(False)
-plt.xticks(rotation=90)
-plt.gcf().set_facecolor('white')
+plt.show()
+
+#Plot bottom 25 number of orders by category
+category_order_counts.sort_values(ascending=False, by = 'order_count').tail(25).plot(kind='barh', x='product_category_name_english', y='order_count', color='orange', legend =  False)
+plt.title('Bottom 25 Number of Orders by Category')
+plt.xlabel('Number of Orders')
+plt.ylabel('Product Category')
+plt.xticks(rotation=0)
+plt.grid(False)
+plt.show()
+
+#Plot number of reviews by category
+category_review_counts.sort_values(by='order_count', ascending=False).head(25).set_index('product_category_name_english')[['percent_reviewed', 'percent_not_reviewed']].plot(
+    kind='barh', 
+    stacked=True, 
+    color=['blue', 'red'], 
+    legend=False
+)
+plt.title('Top 25 Product Categories: Percentage of Orders Reviewed')
+plt.xlabel('Percentage of Orders Reviewed(%)')
+plt.ylabel('Product Category')
+plt.xticks(rotation=0)
+plt.gca().xaxis.set_major_formatter(PercentFormatter(1, decimals=0))
 plt.show()
